@@ -22,6 +22,6 @@ test -e ubuntu || (
 
 cp ks.cfg netboot/
 cp syslinux.cfg netboot/ubuntu-installer/amd64/boot-screens/
-
+cp -a netboot /netboot
 #caused problems with GRUB boot loader
 #apt-get -y upgrade

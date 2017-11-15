@@ -6,7 +6,7 @@ Vagrant.configure(2) do |config|
         server.vm.box = $box_name
         server.vm.hostname = "pxe-server"
         server.vm.network "private_network", ip: "192.168.2.2", virtualbox__intnet: "pxe_network"
-        server.vm.synced_folder "netboot/", "/netboot/" 
+        #server.vm.synced_folder "netboot/", "/netboot/" 
         server.vm.provision :shell, path: "provision_scripts/general.sh"
         server.vm.provision :shell, path: "provision_scripts/dhcp.sh"
         server.vm.provision :shell, path: "provision_scripts/tftp.sh"
