@@ -1,0 +1,18 @@
+example of OpenWRT configuration
+
+install to wifi.kem
+ssh root@wifi mkdir /tftpboot
+scp -r netboot/* root@wifi:/tftpboot/
+ssh root@wifi chmod -R 777 /tftpboot
+ssh root@wifi chown -R nobody /tftpboot
+
+
+root@wifi:~# nano /etc/config/dhcp
+	add into "config dnsmasq" section
+		option enable_tftp '1'
+		option tftp_root '/tftpboot'
+
+	config boot linux
+        option filename 'pxelinux.0'
+        option serveraddress '192.168.42.1'
+        option servername 'OpenWRT'
