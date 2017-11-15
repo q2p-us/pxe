@@ -18,4 +18,4 @@ Public configuration files and environment for testing
 - Describe in detailes development process
 - Describe [q2p/empty.box](https://app.vagrantup.com/q2p/boxes/empty)
 
-Based on [eoli3n/vagrant-pxe](https://github.com/eoli3n/vagrant-pxe)
+Based on [eoli3n/vagrant-pxe](https://github.com/eoli3n/vagrant-pxe) and [stephenrlouie/PXE-Boot-VM](https://github.com/stephenrlouie/PXE-Boot-VM)
