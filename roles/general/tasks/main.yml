@@ -8,10 +8,13 @@
     - tftp
     - p7zip-full
 
-- name: Clean netboot
+- name: Ensure that necessary dirs are exists
   file:
-    path: /vagrant-volume/netboot
-    state: absent
+    path: "/vagrant-volume/{{ item }}"
+    state: directory
+  with_items:
+    - netboot
+    - ubuntu
 
 - name: Check netboot.tar.gz
   stat:
@@ -24,43 +27,35 @@
     dest: /vagrant-volume/netboot.tar.gz
   when: stat_netboot_tar.stat.exists == False
 
-- name: mkdir netboot
-  file:
-    path: /vagrant-volume/netboot
-    state: directory
-
 - name: Extract netboot tarball
   unarchive:
     src: /vagrant-volume/netboot.tar.gz
     dest: /vagrant-volume/netboot
     remote_src: yes
 
-- name: mkdir ubuntu
-  file:
-    path: /vagrant-volume/ubuntu
-    state: directory
-
 - name: Check ubuntu files
   stat:
     path: /vagrant-volume/ubuntu/isolinux
   register: stat_ubuntu
+  when: pxe_env == 'dev'
 
 - name: Download ubuntu
   get_url:
     url: "{{ iso }}"
     dest: /vagrant-volume/ubuntu.iso
-  when: stat_ubuntu.stat.exists == False
+  when: |
+    stat_ubuntu.stat is defined and
+    stat_ubuntu.stat.exists == False and
+    pxe_env == 'dev'
 
 - name: Extract ubuntu # TODO: replace by mounting or extracting via iso_extract
   shell: 7z x /vagrant-volume/ubuntu.iso -o/vagrant-volume/ubuntu/ && rm -rf /vagrant-volume/ubuntu.iso
-  when: stat_ubuntu.stat.exists == False
+  when: |
+    stat_ubuntu.stat is defined and
+    stat_ubuntu.stat.exists == False and
+    pxe_env == 'dev'
 
-#- name: Copy ks.cfg
-#  copy:
-#    src: ks.cfg
-#    dest: /vagrant-volume/netboot/ks.cfg
-
-- name: Copy syslinux.cfg
-  copy:
-    src: syslinux.cfg
+- name: Generate and copy syslinux.cfg
+  template:
+    src: syslinux.cfg.j2
     dest: /vagrant-volume/netboot/ubuntu-installer/amd64/boot-screens/syslinux.cfg

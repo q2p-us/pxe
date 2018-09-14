@@ -1,0 +1,12 @@
+# D-I config version 2.0
+# search path for the c32 support libraries (libcom32, libutil etc.)
+path ubuntu-installer/amd64/boot-screens/
+default ubuntu-installer/amd64/boot-screens/vesamenu.c32
+prompt 0
+timeout 5
+
+label Ubuntu16
+    menu default
+    menu LABEL Ubuntu16
+    kernel ubuntu-installer/amd64/linux
+    append initrd=ubuntu-installer/amd64/initrd.gz domain={{ domain }} hostname={{ hostname }} preseed/url={{ pxe_proto }}://{{pxe_path}}/preseed.txt mirror/http/hostname={{ pxe_mirror }} mirror/protocol={{ pxe_proto }} debian-installer/allow_unauthenticated_ssl=true locale=en_US.UTF-8 debian/priority=critical vga=normal debian-installer/keymap=us console-keymaps-at/keymap=us console-setup/layoutcode=en_US netcfg/choose_interface=auto localechooser/translation/warn-light=true localechooser/translation/warn-severe=true console-setup/ask_detect=false FRONTEND_BACKGROUND=original -

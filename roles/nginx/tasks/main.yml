@@ -41,6 +41,7 @@
     state: link
     owner: nobody
     mode: 0777
+  when: pxe_env == 'dev'
 
 # - name: Enshure that we have proper permissions for web
 #   file:
@@ -48,6 +49,7 @@
 #     recurse: true
 #     owner: nobody
 #     mode: 0777
+#   when: pxe_env == 'dev'
 
 - name: Enable ip forward
   sysctl:

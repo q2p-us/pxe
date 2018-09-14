@@ -1,4 +1,15 @@
 ---
+- name: Fail if pxe_env is wrong
+  fail:
+    msg: "pxe_env is not defined or it's not in dev/stage/prod"
+  when: |
+    pxe_env is not defined or
+    (
+      pxe_env != 'dev' and
+      pxe_env != 'stage' and
+      pxe_env != 'prod'
+    )
+
 - name: apt-get update
   raw: DEBIAN_FRONTEND=noninteractive apt-get -y -q update
 
