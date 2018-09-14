@@ -1,0 +1,22 @@
+---
+- name: Install requred packages
+  package:
+    name: "{{ item }}"
+    state: present
+  with_items:
+    - isc-dhcp-server
+
+- name: Copy dhcpd.conf
+  copy:
+    src: dhcpd.conf
+    dest: /etc/dhcp/dhcpd.conf
+
+- name: Copy isc-dhcp-server
+  copy:
+    src: isc-dhcp-server
+    dest: /etc/default/isc-dhcp-server
+
+- name: Restart service isc-dhcp-server
+  service:
+    name: isc-dhcp-server
+    state: restarted

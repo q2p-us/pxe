@@ -1,0 +1,27 @@
+---
+- name: Install requred packages
+  package:
+    name: "{{ item }}"
+    state: present
+  with_items:
+    - xinetd
+    - tftpd
+    - tftp
+
+- name: Copy tftp
+  copy:
+    src: tftp
+    dest: /etc/xinetd.d/tftp
+
+- name: Symlink to tftpboot
+  file:
+    src: /vagrant-volume/netboot
+    dest: /tftpboot
+    state: link
+    owner: nobody
+    mode: 0777
+
+- name: Restart service xinetd
+  service:
+    name: xinetd
+    state: restarted

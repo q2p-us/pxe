@@ -1,0 +1,59 @@
+---
+- name: Install requred packages
+  package:
+    name: "{{ item }}"
+    state: present
+  with_items:
+    - nginx
+
+- name: mkdir /var/www/html/images/
+  file:
+    path: /var/www/html/images/
+    state: directory
+
+#cp /vagrant/provision_files/test.txt /var/www/images/test.txt
+#cp /netboot/mini_ubuntu_32.iso /var/www/images/my_ubuntu_32.iso
+#ln -s /netboot/ubuntu-installer/amd64/linux /var/www/html/images/linux
+#ln -s /netboot/ks.cfg /var/www/html/ks.cfg
+#ln -s /netboot/ubuntu-installer/amd64/initrd.gz /var/www/html/images/initrd.gz
+#ln -s /vagrant/ubuntu /var/www/html/ubuntu
+
+- name: Copy preseed.txt
+  copy:
+    src: preseed.txt
+    dest: /var/www/html/preseed.txt
+
+- name: Symlink images
+  file:
+    src: /vagrant-volume/netboot/ubuntu-installer/amd64/{{ item }}
+    dest: /var/www/html/images/{{ item }}
+    state: link
+    owner: nobody
+    mode: 0777
+  with_items:
+    - linux
+    - initrd.gz
+
+- name: Symlink ubuntu
+  file:
+    src: /vagrant-volume/ubuntu
+    dest: /var/www/html/ubuntu
+    state: link
+    owner: nobody
+    mode: 0777
+
+# - name: Enshure that we have proper permissions for web
+#   file:
+#     path: /var/www
+#     recurse: true
+#     owner: nobody
+#     mode: 0777
+
+- name: Enable ip forward
+  sysctl:
+    name: net.ipv4.ip_forward
+    value: 1
+    sysctl_set: yes
+
+- name: iptables postrouting
+  shell: iptables -t nat -A POSTROUTING -o $(ip r | grep default | cut -d ' ' -f 5) -j MASQUERADE

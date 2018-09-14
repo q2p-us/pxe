@@ -1,0 +1,19 @@
+---
+- hosts: all
+  gather_facts: False
+  remote_user: root
+  become: true
+  roles:
+    - prepare
+
+- hosts: all
+  gather_facts: true
+  become: true
+  vars:
+    netboot_tar: "http://archive.ubuntu.com/ubuntu/dists/xenial-updates/main/installer-amd64/current/images/netboot/netboot.tar.gz"
+    iso: "http://releases.ubuntu.com/16.04/ubuntu-16.04.5-server-amd64.iso"
+  roles:
+    - general
+    - dhcp
+    - tftp
+    - nginx

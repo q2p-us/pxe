@@ -1,0 +1,6 @@
+*.retry
+ubuntu-xenial-16.04-cloudimg-console.log
+.vagrant
+vagrant-volume/netboot
+vagrant-volume/netboot.tar.gz
+vagrant-volume/ubuntu
