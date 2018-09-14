@@ -23,13 +23,31 @@
     src: preseed.txt
     dest: /var/www/html/preseed.txt
 
-- name: copy files
-  shell: |
-    cp /netboot/ubuntu-installer/amd64/linux /var/www/html/images/linux
-    cp /netboot/ubuntu-installer/amd64/initrd.gz /var/www/html/images/initrd.gz
-    cp -a /vagrant-volume/ubuntu /var/www/html/ubuntu
-    sudo chmod 777 -R /var/www
-    sudo chown -R nobody /var/www
+- name: Symlink images
+  file:
+    src: /vagrant-volume/netboot/ubuntu-installer/amd64/{{ item }}
+    dest: /var/www/html/images/{{ item }}
+    state: link
+    owner: nobody
+    mode: 0777
+  with_items:
+    - linux
+    - initrd.gz
+
+- name: Symlink ubuntu
+  file:
+    src: /vagrant-volume/ubuntu
+    dest: /var/www/html/ubuntu
+    state: link
+    owner: nobody
+    mode: 0777
+
+# - name: Enshure that we have proper permissions for web
+#   file:
+#     path: /var/www
+#     recurse: true
+#     owner: nobody
+#     mode: 0777
 
 - name: Enable ip forward
   sysctl:

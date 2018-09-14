@@ -13,13 +13,13 @@
     src: tftp
     dest: /etc/xinetd.d/tftp
 
-- name: mkdir /tftpboot
+- name: Symlink to tftpboot
   file:
-    path: /tftpboot
-    state: directory
-
-- name: copy to tftpboot
-  shell: cp -R /netboot/* /tftpboot && chmod -R 777 /tftpboot && chown -R nobody /tftpboot
+    src: /vagrant-volume/netboot
+    dest: /tftpboot
+    state: link
+    owner: nobody
+    mode: 0777
 
 - name: Restart service xinetd
   service:

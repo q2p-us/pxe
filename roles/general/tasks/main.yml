@@ -64,6 +64,3 @@
   copy:
     src: syslinux.cfg
     dest: /vagrant-volume/netboot/ubuntu-installer/amd64/boot-screens/syslinux.cfg
-
-- name: cp -a netboot /netboot
-  shell: cp -a /vagrant-volume/netboot /netboot
