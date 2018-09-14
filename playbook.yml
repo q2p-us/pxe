@@ -6,7 +6,6 @@
   roles:
     - prepare
 
-
 - hosts: all
   gather_facts: true
   become: true

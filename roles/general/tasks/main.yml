@@ -13,19 +13,46 @@
     path: /vagrant-volume/netboot
     state: absent
 
-- name: Download tarbal of netboot
-  shell: test -e /vagrant-volume/netboot.tar.gz || wget {{ netboot_tar }} -O /vagrant-volume/netboot.tar.gz
-
-- name: Extract tarbal
-  shell: mkdir /vagrant-volume/netboot && tar zxf /vagrant-volume/netboot.tar.gz -C /vagrant-volume/netboot
-
-- name: Check ubuntu dir
+- name: Check netboot.tar.gz
   stat:
+    path: /vagrant-volume/netboot.tar.gz
+  register: stat_netboot_tar
+
+- name: Download tarball of netboot
+  get_url:
+    url: "{{ netboot_tar }}"
+    dest: /vagrant-volume/netboot.tar.gz
+  when: stat_netboot_tar.stat.exists == False
+
+- name: mkdir netboot
+  file:
+    path: /vagrant-volume/netboot
+    state: directory
+
+- name: Extract netboot tarball
+  unarchive:
+    src: /vagrant-volume/netboot.tar.gz
+    dest: /vagrant-volume/netboot
+    remote_src: yes
+
+- name: mkdir ubuntu
+  file:
     path: /vagrant-volume/ubuntu
+    state: directory
+
+- name: Check ubuntu files
+  stat:
+    path: /vagrant-volume/ubuntu/isolinux
   register: stat_ubuntu
 
-- name: Download and extract ubuntu
-  shell: wget {{ iso }} -O /vagrant-volume/ubuntu.iso && mkdir /vagrant-volume/ubuntu && 7z x /vagrant-volume/ubuntu.iso -o/vagrant-volume/ubuntu/ && rm -rf /vagrant-volume/ubuntu.iso
+- name: Download ubuntu
+  get_url:
+    url: "{{ iso }}"
+    dest: /vagrant-volume/ubuntu.iso
+  when: stat_ubuntu.stat.exists == False
+
+- name: Extract ubuntu # TODO: replace by mounting or extracting via iso_extract
+  shell: 7z x /vagrant-volume/ubuntu.iso -o/vagrant-volume/ubuntu/ && rm -rf /vagrant-volume/ubuntu.iso
   when: stat_ubuntu.stat.exists == False
 
 #- name: Copy ks.cfg
