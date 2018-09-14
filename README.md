@@ -10,7 +10,6 @@ Public configuration files and environment for testing
     + stage -- gist based (https)
     + prod -- github based
     + emulation -- client will be connected to real server
-- Change provision to ansible
 - Post configuration (ipmi, ssh), take from _ks_gist.cfg_
 - Move preseed to submodule
 - Add COM port configuration and testing
