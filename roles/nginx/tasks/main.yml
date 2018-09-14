@@ -18,10 +18,14 @@
 #ln -s /netboot/ubuntu-installer/amd64/initrd.gz /var/www/html/images/initrd.gz
 #ln -s /vagrant/ubuntu /var/www/html/ubuntu
 
+- name: Copy preseed.txt
+  copy:
+    src: preseed.txt
+    dest: /var/www/html/preseed.txt
+
 - name: copy files
   shell: |
     cp /netboot/ubuntu-installer/amd64/linux /var/www/html/images/linux
-    cp /vagrant-volume/preseed.txt /var/www/html/preseed.txt
     cp /netboot/ubuntu-installer/amd64/initrd.gz /var/www/html/images/initrd.gz
     cp -a /vagrant-volume/ubuntu /var/www/html/ubuntu
     sudo chmod 777 -R /var/www

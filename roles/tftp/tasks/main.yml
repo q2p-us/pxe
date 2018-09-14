@@ -10,7 +10,7 @@
 
 - name: Copy tftp
   copy:
-    src: provision_files/tftp
+    src: tftp
     dest: /etc/xinetd.d/tftp
 
 - name: mkdir /tftpboot
