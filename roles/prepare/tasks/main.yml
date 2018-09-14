@@ -1,0 +1,10 @@
+---
+- name: apt-get update
+  raw: DEBIAN_FRONTEND=noninteractive apt-get -y -q update
+
+- name: install python
+  raw: test -e /usr/bin/python || (DEBIAN_FRONTEND=noninteractive apt-get install -yq python-minimal python-zipstream)
+  register: install_python
+  changed_when:
+    - install_python.stdout != ""
+    - install_python.stdout != "\r\n"

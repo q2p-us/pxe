@@ -1,0 +1,27 @@
+---
+- name: Install requred packages
+  package:
+    name: "{{ item }}"
+    state: present
+  with_items:
+    - xinetd
+    - tftpd
+    - tftp
+
+- name: Copy tftp
+  copy:
+    src: provision_files/tftp
+    dest: /etc/xinetd.d/tftp
+
+- name: mkdir /tftpboot
+  file:
+    path: /tftpboot
+    state: directory
+
+- name: copy to tftpboot
+  shell: cp -R /netboot/* /tftpboot && chmod -R 777 /tftpboot && chown -R nobody /tftpboot
+
+- name: Restart service xinetd
+  service:
+    name: xinetd
+    state: restarted

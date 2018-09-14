@@ -1,0 +1,42 @@
+---
+- name: Install requred packages
+  package:
+    name: "{{ item }}"
+    state: present
+  with_items:
+    - curl
+    - tftp
+    - p7zip-full
+
+- name: Clean netboot
+  file:
+    path: /vagrant-volume/netboot
+    state: absent
+
+- name: Download tarbal of netboot
+  shell: test -e /vagrant-volume/netboot.tar.gz || wget {{ netboot_tar }} -O /vagrant-volume/netboot.tar.gz
+
+- name: Extract tarbal
+  shell: mkdir /vagrant-volume/netboot && tar zxf /vagrant-volume/netboot.tar.gz -C /vagrant-volume/netboot
+
+- name: Check ubuntu dir
+  stat:
+    path: /vagrant-volume/ubuntu
+  register: stat_ubuntu
+
+- name: Download and extract ubuntu
+  shell: wget {{ iso }} -O /vagrant-volume/ubuntu.iso && mkdir /vagrant-volume/ubuntu && 7z x /vagrant-volume/ubuntu.iso -o/vagrant-volume/ubuntu/ && rm -rf /vagrant-volume/ubuntu.iso
+  when: stat_ubuntu.stat.exists == False
+
+#- name: Copy ks.cfg
+#  copy:
+#    src: ks.cfg
+#    dest: /vagrant-volume/netboot/ks.cfg
+
+- name: Copy syslinux.cfg
+  copy:
+    src: syslinux.cfg
+    dest: /vagrant-volume/netboot/ubuntu-installer/amd64/boot-screens/syslinux.cfg
+
+- name: cp -a netboot /netboot
+  shell: cp -a /vagrant-volume/netboot /netboot
