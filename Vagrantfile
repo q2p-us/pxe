@@ -9,6 +9,7 @@ Vagrant.configure(2) do |config|
         server.vm.synced_folder "vagrant-volume/", "/vagrant-volume/" 
         server.vm.provision "ansible" do |ansible|
             ansible.playbook = "playbook.yml"
+            ansible.extra_vars = { 'pxe_env': "#{ENV['pxe_env'] || "dev"}" }
         end
         server.vm.provider :virtualbox do |vb|
             vb.memory = '1024'

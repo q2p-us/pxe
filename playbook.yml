@@ -1,15 +1,20 @@
 ---
-- hosts: all
-  gather_facts: False
+- hosts: server
+  gather_facts: false
   remote_user: root
   become: true
   roles:
     - prepare
 
-- hosts: all
+- hosts: server
   gather_facts: true
   become: true
   vars:
+    domain: "q2p.us"
+    hostname: "kem"
+    pxe_vagrant_ip: "192.168.2.2"
+    pxe_path_stage: "gist.githubusercontent.com/b00men/40fb6781b8bc8b4d94ef15aa18c462c9/raw"
+    pxe_path_prod: "raw.githubusercontent.com/q2p-us/pxe/master"
     netboot_tar: "http://archive.ubuntu.com/ubuntu/dists/xenial-updates/main/installer-amd64/current/images/netboot/netboot.tar.gz"
     iso: "http://releases.ubuntu.com/16.04/ubuntu-16.04.5-server-amd64.iso"
   roles:

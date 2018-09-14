@@ -1,0 +1,11 @@
+---
+
+pxe_path_dev: "{{ pxe_vagrant_ip }}"
+pxe_mirror_dev: "{{ pxe_vagrant_ip }}"
+pxe_mirror_prod: "archive.ubuntu.com"
+
+pxe_proto: "{% if pxe_env=='dev' %}http{% else %}https{% endif %}"
+pxe_mirror: "{% if pxe_env=='dev' %}{{ pxe_mirror_dev }}{% else %}{{ pxe_mirror_prod }}{% endif %}"
+pxe_path: "{% if pxe_env=='dev' %}{{ pxe_path_dev }}\
+           {% elif pxe_env=='stage' %}{{ pxe_path_stage }}\
+           {% elif pxe_env=='prod' %}{{ pxe_path_prod }}{% endif %}"
