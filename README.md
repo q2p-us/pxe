@@ -18,6 +18,28 @@ A good choice to check changes before publishing in a repository.
 Test server will be deployed with a PXE service but will use a global ubuntu mirror and preseed from [repository](https://github.com/q2p-us/pxe/blob/master/preseed.txt). The speed of installation will depend on your connection speed.  
 A good choice to check current status on production.
 
+## OpenWRT
+
+A raw example of OpenWRT configuration as PXE server
+
+```
+ssh root@wifi mkdir /tftpboot
+scp -r /vagrant-volume/netboot/* root@wifi:/tftpboot/
+ssh root@wifi chmod -R 777 /tftpboot
+ssh root@wifi chown -R nobody /tftpboot
+
+ssh root@wifi:~# nano /etc/config/dhcp
+	
+    add into "config dnsmasq" section
+		option enable_tftp '1'
+		option tftp_root '/tftpboot'
+
+	config boot linux
+        option filename 'pxelinux.0'
+        option serveraddress 'IP_OF_THE_ROUTER'
+        option servername 'OpenWRT'
+```
+
 ## TODO
 - Prepare proper test's environment
     + emulation -- client will be connected to real server
