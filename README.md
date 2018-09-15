@@ -6,16 +6,21 @@ Public configuration files and environment for testing
 ### Dev
 `vagrang up` or `pxe_env=dev vagrang up` will download **whole** ubuntu image (~800mb) and netboot tarball if it aren't presented already.  
 Test server will be deployed with a PXE service, hosted preseed file and a http ubuntu mirror. This will provide a quite fast installation on test client.  
+A post install script will be provisioned from your local repository.  
 A good choice to start of developing a new feature.
 
 ### Stage
 `pxe_env=stage vagrang up` will download only netboot tarball if it isn't presented already.  
 Test server will be deployed with a PXE service but will use a global ubuntu mirror and preseed from [public gist](https://gist.github.com/b00men/40fb6781b8bc8b4d94ef15aa18c462c9). The speed of installation will depend on your connection speed.  
+A post install script will be provisioned from [public gist](https://gist.github.com/b00men/a4b0b0c829c5d16a824945ae16952038).  
 A good choice to check changes before publishing in a repository.
+
+In order to publicate new changes in gist with stage preseed file, take a `preseed-stage.txt` which was generated after Vagrant provision.
 
 ### Prod
 `pxe_env=prod vagrang up` will download only netboot tarball if it isn't presented already.  
 Test server will be deployed with a PXE service but will use a global ubuntu mirror and preseed from [repository](https://github.com/q2p-us/pxe/blob/master/preseed.txt). The speed of installation will depend on your connection speed.  
+A post install script will be provisioned from [repository](https://github.com/q2p-us/pxe/blob/master/post-install.sh).  
 A good choice to check current status on production.
 
 ## OpenWRT
