@@ -49,10 +49,11 @@ Vagrant.configure(2) do |config|
 
     config.push.define "local-exec" do |push|
         push.inline = <<-SCRIPT
-        socat UNIX-CONNECT:$client_socet PTY,link=$client_pty &
+        clear
+        socat UNIX-CONNECT:#{$client_socet} PTY,link=#{$client_pty} &
         echo "Ctrl+A Ctrl+D for detach"
         sleep 5
-        screen $client_pty
+        screen #{$client_pty}
         SCRIPT
     end
 
