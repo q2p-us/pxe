@@ -443,7 +443,7 @@ d-i grub-installer/with_other_os boolean true
 # During installations from serial console, the regular virtual consoles
 # (VT1-VT6) are normally disabled in /etc/inittab. Uncomment the next
 # line to prevent this.
-#d-i finish-install/keep-consoles boolean true
+d-i finish-install/keep-consoles boolean true
 
 # Avoid that last message about the install being complete.
 d-i finish-install/reboot_in_progress note
@@ -467,6 +467,7 @@ d-i finish-install/reboot_in_progress note
 #   debconf-get-selections --installer > file
 #   debconf-get-selections >> file
 
+d-i debian-installer/add-kernel-opts console=tty0 console=ttyS0,115200n8 
 
 #### Advanced options
 ### Running custom commands during the installation
@@ -491,6 +492,6 @@ d-i finish-install/reboot_in_progress note
 # packages and run commands in the target system.
 #d-i preseed/late_command string apt-install zsh; in-target chsh -s /bin/zsh
 d-i preseed/late_command string \
-    in-target wget {{ pxe_proto }}://{{ pxe_path_post_install }}/post-install.sh -O/root/post-install.sh 2>&1 | tee /root/post-install.log || true; \
-    in-target chmod a+rx /root/post-install.sh 2>&1 | tee /root/post-install.log || true; \
-    in-target /root/post-install.sh 2>&1 | tee /root/post-install.log || true;
+    in-target wget {{ pxe_proto }}://{{ pxe_path_post_install }}/post-install.sh -O/root/post-install.sh 2>&1; \
+    in-target chmod a+rx /root/post-install.sh; \
+    in-target /root/post-install.sh;

@@ -444,7 +444,7 @@ d-i grub-installer/with_other_os boolean true
 # During installations from serial console, the regular virtual consoles
 # (VT1-VT6) are normally disabled in /etc/inittab. Uncomment the next
 # line to prevent this.
-#d-i finish-install/keep-consoles boolean true
+d-i finish-install/keep-consoles boolean true
 
 # Avoid that last message about the install being complete.
 d-i finish-install/reboot_in_progress note
@@ -468,6 +468,7 @@ d-i finish-install/reboot_in_progress note
 #   debconf-get-selections --installer > file
 #   debconf-get-selections >> file
 
+d-i debian-installer/add-kernel-opts console=tty0 console=ttyS0,115200n8 
 
 #### Advanced options
 ### Running custom commands during the installation
