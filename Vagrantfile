@@ -33,7 +33,9 @@ Vagrant.configure(2) do |config|
                 '--boot1', 'disk',
                 '--boot2', 'net',
                 '--boot3', 'none',
-                '--boot4', 'none'
+                '--boot4', 'none',
+                '--uart1', '0x3F8', '4',
+                '--uartmode1', 'file', '/tmp/test_pxe_serial_out'
             ]
         end
     end
