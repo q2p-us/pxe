@@ -18,10 +18,41 @@
 #ln -s /netboot/ubuntu-installer/amd64/initrd.gz /var/www/html/images/initrd.gz
 #ln -s /vagrant/ubuntu /var/www/html/ubuntu
 
-- name: Copy preseed.txt
-  copy:
-    src: preseed.txt
+- name: Copy dev preseed.txt
+  template:
+    src: preseed.txt.j2
     dest: /var/www/html/preseed.txt
+  vars:
+    pxe_dl_security: false
+    pxe_proto: "http"
+    pxe_path_post_install: "{{ pxe_vagrant_ip }}"
+
+- name: Generate local preseed-stage.txt
+  local_action: 
+    module: template
+    src: preseed.txt.j2
+    dest: preseed-stage.txt
+  become: false
+  vars:
+    pxe_dl_security: true
+    pxe_proto: "https"
+    pxe_path_post_install: "{{ pxe_path_stage_post_install }}"
+
+- name: Generate local prod preseed.txt
+  local_action: 
+    module: template
+    src: preseed.txt.j2
+    dest: preseed.txt
+  become: false
+  vars:
+    pxe_dl_security: true
+    pxe_proto: "https"
+    pxe_path_post_install: "{{ pxe_path_prod }}"
+
+- name: Copy post-install.sh
+  copy:
+    src: post-install.sh
+    dest: /var/www/html/post-install.sh
 
 - name: Symlink images
   file:
