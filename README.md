@@ -52,6 +52,7 @@ ssh root@wifi:~# nano /etc/config/dhcp
 - Add COM port configuration and testing
 - Default action -- boot from hdd
 - Simple remote trigger to install from pxe (variable for dhcp or tftpd)
+- iPXE
 - Describe in detailes development process
 - Describe [q2p/empty.box](https://app.vagrantup.com/q2p/boxes/empty)
 
