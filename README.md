@@ -4,13 +4,13 @@ Public configuration files and environment for testing
 ## Operations
 
 ### Dev
-`vagrang up` or `pxe_env=dev vagrang up` will download **whole** ubuntu image (~800mb) and netboot tarball if it aren't presented already.  
+`vagrant up` or `pxe_env=dev vagrant up` will download **whole** ubuntu image (~800mb) and netboot tarball if it aren't presented already.  
 Test server will be deployed with a PXE service, hosted preseed file and a http ubuntu mirror. This will provide a quite fast installation on test client.  
 A post install script will be provisioned from your local repository.  
 A good choice to start of developing a new feature.
 
 ### Stage
-`pxe_env=stage vagrang up` will download only netboot tarball if it isn't presented already.  
+`pxe_env=stage vagrant up` will download only netboot tarball if it isn't presented already.  
 Test server will be deployed with a PXE service but will use a global ubuntu mirror and preseed from [public gist](https://gist.github.com/b00men/40fb6781b8bc8b4d94ef15aa18c462c9). The speed of installation will depend on your connection speed.  
 A post install script will be provisioned from [public gist](https://gist.github.com/b00men/a4b0b0c829c5d16a824945ae16952038).  
 A good choice to check changes before publishing in a repository.
@@ -18,10 +18,32 @@ A good choice to check changes before publishing in a repository.
 In order to publicate new changes in gist with stage preseed file, take a `preseed-stage.txt` which was generated after Vagrant provision.
 
 ### Prod
-`pxe_env=prod vagrang up` will download only netboot tarball if it isn't presented already.  
+`pxe_env=prod vagrant up` will download only netboot tarball if it isn't presented already.  
 Test server will be deployed with a PXE service but will use a global ubuntu mirror and preseed from [repository](https://github.com/q2p-us/pxe/blob/master/preseed.txt). The speed of installation will depend on your connection speed.  
 A post install script will be provisioned from [repository](https://github.com/q2p-us/pxe/blob/master/post-install.sh).  
 A good choice to check current status on production.
+
+### Known issues
+
+#### Client VM stuck on pxe load
+
+VM for a client might be paused on loading of `pxelimux.0` due awaiting of a serial console. In order to resolve the issue:
+
+1. Install dependencies `socat`, `screen`
+2. Do `vagrant push` to activate serial console client
+
+#### Some files failed on download for dev environment
+
+Here is a possible issue with ubuntu deb file names.  
+In order to check which files are incorrect, play:
+
+```bash
+vagrant ssh server
+cd /var/www/html/ubuntu
+ls $(cat md5sum.txt | awk '{print $2}' | grep "^./pool") >/dev/null
+```
+
+Then rename incorect files to fix installing from local deb repo
 
 ## OpenWRT
 
@@ -49,7 +71,7 @@ ssh root@wifi:~# nano /etc/config/dhcp
 - Prepare proper test's environment
     + emulation -- client will be connected to real server
 - Post configuration (ipmi, ssh), take from _ks_gist.cfg_
-- Add COM port configuration and testing
+- Describe COM port configuration and testing
 - Default action -- boot from hdd
 - Simple remote trigger to install from pxe (variable for dhcp or tftpd)
 - iPXE
