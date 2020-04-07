@@ -31,7 +31,7 @@
   local_action: 
     module: template
     src: preseed.txt.j2
-    dest: preseed-stage.txt
+    dest: ./preseed-stage.txt
   become: false
   vars:
     pxe_dl_security: true
