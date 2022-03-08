@@ -6,56 +6,46 @@
   with_items:
     - curl
     - tftp
-    - p7zip-full
+    - ipxe
 
-- name: Ensure that necessary dirs are exists
-  file:
-    path: "/vagrant-volume/{{ item }}"
-    state: directory
-  with_items:
-    - netboot
-    - ubuntu
-
-- name: Check netboot.tar.gz
+- name: Check k3os iso
   stat:
-    path: /vagrant-volume/netboot.tar.gz
-  register: stat_netboot_tar
-
-- name: Download tarball of netboot
-  get_url:
-    url: "{{ netboot_tar }}"
-    dest: /vagrant-volume/netboot.tar.gz
-  when: stat_netboot_tar.stat.exists == False
-
-- name: Extract netboot tarball
-  unarchive:
-    src: /vagrant-volume/netboot.tar.gz
-    dest: /vagrant-volume/netboot
-    remote_src: yes
-
-- name: Check ubuntu files
-  stat:
-    path: /vagrant-volume/ubuntu/isolinux
-  register: stat_ubuntu
+    path: /vagrant-volume/http/k3os-amd64.iso
+  register: stat_k3os_iso
   when: pxe_env == 'dev'
 
-- name: Download ubuntu
+- name: Download k3os iso
   get_url:
-    url: "{{ iso }}"
-    dest: /vagrant-volume/ubuntu.iso
+    url: "{{ k3os_iso_url_prod }}"
+    dest: /vagrant-volume/http/k3os-amd64.iso
   when: |
-    stat_ubuntu.stat is defined and
-    stat_ubuntu.stat.exists == False and
+    stat_k3os_iso.stat is defined and
+    stat_k3os_iso.stat.exists == False and
     pxe_env == 'dev'
 
-- name: Extract ubuntu # TODO: replace by mounting or extracting via iso_extract
-  shell: 7z x /vagrant-volume/ubuntu.iso -o/vagrant-volume/ubuntu/ && rm -rf /vagrant-volume/ubuntu.iso
-  when: |
-    stat_ubuntu.stat is defined and
-    stat_ubuntu.stat.exists == False and
-    pxe_env == 'dev'
+- name: Check k3os kernel
+  stat:
+    path: /vagrant-volume/tftpboot/k3os/k3os-vmlinuz-amd64
+  register: stat_k3os_kernel
+
+- name: Check k3os initrd
+  stat:
+    path: /vagrant-volume/tftpboot/k3os/k3os-initrd-amd64
+  register: stat_k3os_initrd
+
+- name: Download k3os kernel
+  get_url:
+    url: "https://github.com/q2p-us/k3os/releases/download/v0.22.2-k3s2r0-grubserial/k3os-vmlinuz-amd64"
+    dest: /vagrant-volume/tftpboot/k3os/k3os-vmlinuz-amd64
+  when: stat_k3os_kernel.stat.exists == False
+
+- name: Download k3os inird with grub serail patch
+  get_url:
+    url: "https://github.com/q2p-us/k3os/releases/download/v0.22.2-k3s2r0-grubserial/k3os-initrd-amd64"
+    dest: /vagrant-volume/tftpboot/k3os/k3os-initrd-amd64
+  when: stat_k3os_initrd.stat.exists == False
 
 - name: Generate and copy syslinux.cfg
   template:
     src: syslinux.cfg.j2
-    dest: /vagrant-volume/netboot/ubuntu-installer/amd64/boot-screens/syslinux.cfg
+    dest: /vagrant-volume/tftpboot/pxelinux.cfg/default

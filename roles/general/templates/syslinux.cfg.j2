@@ -1,20 +1,27 @@
-# D-I config version 2.0
-# search path for the c32 support libraries (libcom32, libutil etc.)
-serial 0 9600
-path ubuntu-installer/amd64/boot-screens/
-default ubuntu-installer/amd64/boot-screens/vesamenu.c32
-prompt 0
-timeout 150
-#default Ubuntu18
+SERIAL 0 9600
+PATH pxelinux.cfg/
+UI pxelinux.cfg/menu.c32
+ALLOWOPTIONS 0
+PROMPT 0
+TIMEOUT 100
 
-label Ubuntu18serial
-    menu default
-    menu LABEL Ubuntu18serial
-    kernel ubuntu-installer/amd64/linux
-    append initrd=ubuntu-installer/amd64/initrd.gz domain={{ domain }} hostname={{ hostname }} preseed/url={{ pxe_proto }}://{{ pxe_path_preseed }}/preseed.txt mirror/http/hostname={{ pxe_mirror }} mirror/protocol=http debian-installer/allow_unauthenticated_ssl=true locale=en_US.UTF-8 debian/priority=critical vga=normal debian-installer/keymap=us console-keymaps-at/keymap=us console-setup/layoutcode=en_US netcfg/choose_interface=auto localechooser/translation/warn-light=true localechooser/translation/warn-severe=true console=tty0 console=ttyS0,115200n8 console-setup/ask_detect=false FRONTEND_BACKGROUND=noninteractive -
+MENU TITLE PXE Menu
 
+LABEL k3osInstall
+    MENU default
+    MENU LABEL k3OS Automated Install
+    KERNEL k3os/k3os-vmlinuz-amd64
+    APPEND initrd=k3os/k3os-initrd-amd64 printk.devkmsg=on console=ttyS0 k3os.mode=install k3os.fallback_mode=live k3os.install.silent=true k3os.install.iso_url={{ k3os_iso_url }} k3os.install.tty=ttyS0 hostname={{ hostname }} k3os.install.device=/dev/sda k3os.dns_nameserver=1.1.1.1 k3os.dns_nameserver=8.8.8.8 k3os.password=$1$QH1IioX4$3957SoVxg68AF1QvnNCY0. ssh_authorized_keys=github:b00men
 
-label Ubuntu18
-    menu LABEL Ubuntu18
-    kernel ubuntu-installer/amd64/linux
-    append initrd=ubuntu-installer/amd64/initrd.gz domain={{ domain }} hostname={{ hostname }} preseed/url={{ pxe_proto }}://{{ pxe_path_preseed }}/preseed.txt mirror/http/hostname={{ pxe_mirror }} mirror/protocol=http debian-installer/allow_unauthenticated_ssl=true locale=en_US.UTF-8 debian/priority=critical vga=normal debian-installer/keymap=us console-keymaps-at/keymap=us console-setup/layoutcode=en_US netcfg/choose_interface=auto localechooser/translation/warn-light=true localechooser/translation/warn-severe=true console=ttyS0,115200n8 console=tty0 console-setup/ask_detect=false FRONTEND_BACKGROUND=noninteractive -
+LABEL k3osLive
+    MENU LABEL k3OS Live Boot
+    KERNEL k3os/k3os-vmlinuz-amd64
+    APPEND initrd=k3os/k3os-initrd-amd64 printk.devkmsg=on console=ttyS0 k3os.mode=live k3os.install.iso_url={{ k3os_iso_url }} k3os.install.tty=ttyS0
+
+LABEL local0
+        MENU LABEL Boot local hard drive 0
+        LOCALBOOT 0
+
+LABEL local1
+        MENU LABEL Boot local hard drive 1
+        LOCALBOOT 1

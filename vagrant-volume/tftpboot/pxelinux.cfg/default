@@ -1,0 +1,27 @@
+SERIAL 0 9600
+PATH pxelinux.cfg/
+UI pxelinux.cfg/menu.c32
+ALLOWOPTIONS 0
+PROMPT 0
+TIMEOUT 100
+
+MENU TITLE PXE Menu
+
+LABEL k3osInstall
+    MENU default
+    MENU LABEL k3OS Automated Install
+    KERNEL k3os/k3os-vmlinuz-amd64
+    APPEND initrd=k3os/k3os-initrd-amd64 printk.devkmsg=on console=ttyS0 k3os.mode=install k3os.fallback_mode=live k3os.install.silent=true k3os.install.iso_url=https://github.com/rancher/k3os/releases/download/v0.22.2-k3s2r0/k3os-amd64.iso k3os.install.tty=ttyS0 hostname=kem.q2p.us k3os.install.device=/dev/sda k3os.dns_nameserver=1.1.1.1 k3os.dns_nameserver=8.8.8.8 k3os.password=$1$QH1IioX4$3957SoVxg68AF1QvnNCY0. ssh_authorized_keys=github:b00men
+
+LABEL k3osLive
+    MENU LABEL k3OS Live Boot
+    KERNEL k3os/k3os-vmlinuz-amd64
+    APPEND initrd=k3os/k3os-initrd-amd64 printk.devkmsg=on console=ttyS0 k3os.mode=live k3os.install.iso_url=https://github.com/rancher/k3os/releases/download/v0.22.2-k3s2r0/k3os-amd64.iso k3os.install.tty=ttyS0
+
+LABEL local0
+        MENU LABEL Boot local hard drive 0
+        LOCALBOOT 0
+
+LABEL local1
+        MENU LABEL Boot local hard drive 1
+        LOCALBOOT 1
