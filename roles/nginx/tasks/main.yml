@@ -11,64 +11,10 @@
     path: /var/www/html/images/
     state: directory
 
-#cp /vagrant/provision_files/test.txt /var/www/images/test.txt
-#cp /netboot/mini_ubuntu_32.iso /var/www/images/my_ubuntu_32.iso
-#ln -s /netboot/ubuntu-installer/amd64/linux /var/www/html/images/linux
-#ln -s /netboot/ks.cfg /var/www/html/ks.cfg
-#ln -s /netboot/ubuntu-installer/amd64/initrd.gz /var/www/html/images/initrd.gz
-#ln -s /vagrant/ubuntu /var/www/html/ubuntu
-
-- name: Copy dev preseed.txt
-  template:
-    src: preseed.txt.j2
-    dest: /var/www/html/preseed.txt
-  vars:
-    pxe_dl_security: false
-    pxe_proto: "http"
-    pxe_path_post_install: "{{ pxe_vagrant_ip }}"
-
-- name: Generate local preseed-stage.txt
-  local_action: 
-    module: template
-    src: preseed.txt.j2
-    dest: ./preseed-stage.txt
-  become: false
-  vars:
-    pxe_dl_security: true
-    pxe_proto: "https"
-    pxe_path_post_install: "{{ pxe_path_stage_post_install }}"
-
-- name: Generate local prod preseed.txt
-  local_action: 
-    module: template
-    src: preseed.txt.j2
-    dest: preseed.txt
-  become: false
-  vars:
-    pxe_dl_security: true
-    pxe_proto: "https"
-    pxe_path_post_install: "{{ pxe_path_prod }}"
-
-- name: Copy post-install.sh
-  copy:
-    src: post-install.sh
-    dest: /var/www/html/post-install.sh
-
-- name: Symlink images
+- name: Symlink vagrant
   file:
-    src: /vagrant-volume/netboot/ubuntu-installer/amd64/{{ item }}
-    dest: /var/www/html/images/{{ item }}
-    state: link
-    owner: nobody
-    mode: 0777
-  with_items:
-    - linux
-    - initrd.gz
-
-- name: Symlink ubuntu
-  file:
-    src: /vagrant-volume/ubuntu
-    dest: /var/www/html/ubuntu
+    src: /vagrant-volume/http
+    dest: /var/www/html/vagrant-http
     state: link
     owner: nobody
     mode: 0777

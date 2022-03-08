@@ -15,7 +15,7 @@
 
 - name: Symlink to tftpboot
   file:
-    src: /vagrant-volume/netboot
+    src: /vagrant-volume/tftpboot
     dest: /tftpboot
     state: link
     owner: nobody

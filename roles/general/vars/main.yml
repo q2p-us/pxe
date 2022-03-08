@@ -1,11 +1,6 @@
 ---
 
-pxe_path_dev: "{{ pxe_vagrant_ip }}"
-pxe_mirror_dev: "{{ pxe_vagrant_ip }}"
-pxe_mirror_prod: "archive.ubuntu.com"
+k3os_iso_url_dev: "http://{{ pxe_vagrant_ip }}/vagrant-http/k3os-amd64.iso"
+k3os_iso_url_prod: "https://github.com/rancher/k3os/releases/download/v0.22.2-k3s2r0/k3os-amd64.iso"
 
-pxe_proto: "{% if pxe_env=='dev' %}http{% else %}https{% endif %}"
-pxe_mirror: "{% if pxe_env=='dev' %}{{ pxe_mirror_dev }}{% else %}{{ pxe_mirror_prod }}{% endif %}"
-pxe_path_preseed: "{% if pxe_env=='dev' %}{{ pxe_path_dev }}\
-           {% elif pxe_env=='stage' %}{{ pxe_path_stage_preseed }}\
-           {% elif pxe_env=='prod' %}{{ pxe_path_prod }}{% endif %}"
+k3os_iso_url: "{% if pxe_env=='dev' %}{{ k3os_iso_url_dev }}{% else %}{{ k3os_iso_url_prod }}{% endif %}"
